@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api/core";
 import { ref } from "vue";
+import BaseLayout from "./layouts/BaseLayout.vue";
 
 const greetMsg = ref("");
 const name = ref("");
@@ -12,13 +13,15 @@ async function greet() {
 </script>
 
 <template>
-  <main class="container">
-      <div v-if="greetMsg" class="text-yellow-600">{{ greetMsg }}</div>
-      <form @submit.prevent="greet">
-          <input v-model="name" type="text" placeholder="Nom" />
-           <NButton type="success" @click="greet">SALUTATIONS</NButton>
-      </form>
-  </main>
+    <BaseLayout>
+        <main class="container">
+            <div v-if="greetMsg" class="text-yellow-600">{{ greetMsg }}</div>
+            <form @submit.prevent="greet">
+                <input v-model="name" type="text" placeholder="Nom" />
+                <NButton type="success" @click="greet">SALUTATIONS</NButton>
+            </form>
+        </main>
+    </BaseLayout>
 </template>
 
 <style scoped>
