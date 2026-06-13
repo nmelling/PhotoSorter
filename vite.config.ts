@@ -3,6 +3,7 @@ import vue from "@vitejs/plugin-vue";
 import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
 import Components from "unplugin-vue-components/vite";
 import { defineConfig } from "vite";
+import VueDevTools from "vite-plugin-vue-devtools";
 
 // @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
@@ -15,6 +16,7 @@ export default defineConfig(async () => ({
 		Components({
 			resolvers: [NaiveUiResolver()],
 		}),
+		VueDevTools(),
 	],
 
 	// Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
