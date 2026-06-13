@@ -1,14 +1,23 @@
 <script setup lang="ts">
 import {
 	Folder28Regular as SourceFolder,
-	// Folder28Filled as SourceFolderSelected,
+	Folder28Filled as SourceFolderSelected,
 	FolderAdd24Regular as TargetFolder,
-	// FolderAdd24Filled as TargetFolderSelected,
+	FolderAdd24Filled as TargetFolderSelected,
 } from "@vicons/fluent";
 import { NIcon } from "naive-ui";
-import { type Component, computed, h, ref } from "vue";
+import { type Component, computed, h, ref, watch } from "vue";
+import { useAppstore } from "../stores/app.store";
 
+const appstore = useAppstore();
 const collapsed = ref(true);
+const activeKey = ref("source");
+
+function storeMenuKey() {
+	appstore.setMenuKey(activeKey.value);
+}
+
+watch(() => activeKey.value, storeMenuKey, { immediate: true });
 
 function renderIcon(icon: Component) {
 	return () =>
@@ -22,12 +31,16 @@ const menuOptions = computed(() => {
 		{
 			label: "Source",
 			key: "source",
-			icon: renderIcon(SourceFolder),
+			icon: renderIcon(
+				appstore.$state.sourcePath ? SourceFolderSelected : SourceFolder
+			),
 		},
 		{
 			label: "Cible",
 			key: "target",
-			icon: renderIcon(TargetFolder),
+			icon: renderIcon(
+				appstore.$state.targetPath ? TargetFolderSelected : TargetFolder
+			),
 		},
 	];
 });
@@ -55,6 +68,7 @@ const menuOptions = computed(() => {
           show-trigger
         >
           <n-menu
+            v-model:value="activeKey"
             :collapsed="collapsed"
             :collapsed-width="64"
             :collapsed-icon-size="22"
