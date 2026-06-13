@@ -1,26 +1,33 @@
 <script setup lang="ts">
-import { invoke } from "@tauri-apps/api/core";
-import { ref } from "vue";
+import { NIcon } from "naive-ui";
+import { storeToRefs } from "pinia";
+import { computed } from "vue";
+import FolderExplorer from "./components/FolderExplorer.vue";
 import BaseLayout from "./layouts/BaseLayout.vue";
+import { renderIcon, SourceFolder, TargetFolder, Valid } from "./lib/icons";
+import { useAppstore } from "./stores/app.store";
 
-const greetMsg = ref("");
-const name = ref("");
+const appstore = useAppstore();
+const { sourcePath, targetPath } = storeToRefs(appstore);
 
-async function greet() {
-	// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-	greetMsg.value = await invoke("greet", { name: name.value });
-}
+const isInit = computed(() => {
+	return sourcePath.value && targetPath.value;
+});
 </script>
 
 <template>
     <BaseLayout>
-        <main class="container">
-            <div v-if="greetMsg" class="text-yellow-600">{{ greetMsg }}</div>
-            <form @submit.prevent="greet">
-                <input v-model="name" type="text" placeholder="Nom" />
-                <NButton type="success" @click="greet">SALUTATIONS</NButton>
-            </form>
-        </main>
+        <FolderExplorer v-if="isInit" />
+        <div>
+            <div>
+                <NButton :render-icon="renderIcon(SourceFolder)">Spécifier le dossier source</NButton>
+                <NIcon :component="Valid" :depth="sourcePath ? 1 : 5" />
+            </div>
+            <div>
+                <NButton :render-icon="renderIcon(TargetFolder)">Spécifier le dossier cible</NButton>
+                <NIcon :component="Valid" :depth="targetPath ? 1 : 5" />
+            </div>
+        </div>
     </BaseLayout>
 </template>
 
