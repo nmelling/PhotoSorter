@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { computed, ref, watch } from "vue";
 import {
-	Folder28Regular as SourceFolder,
-	Folder28Filled as SourceFolderSelected,
-	FolderAdd24Regular as TargetFolder,
-	FolderAdd24Filled as TargetFolderSelected,
-} from "@vicons/fluent";
-import { NIcon } from "naive-ui";
-import { type Component, computed, h, ref, watch } from "vue";
+	renderIcon,
+	SourceFolder,
+	SourceFolderSelected,
+	TargetFolder,
+	TargetFolderSelected,
+} from "../lib/icons";
 import { useAppstore } from "../stores/app.store";
 
 const appstore = useAppstore();
@@ -18,13 +18,6 @@ function storeMenuKey() {
 }
 
 watch(() => activeKey.value, storeMenuKey, { immediate: true });
-
-function renderIcon(icon: Component) {
-	return () =>
-		h(NIcon, null, {
-			default: () => h(icon),
-		});
-}
 
 const menuOptions = computed(() => {
 	return [
