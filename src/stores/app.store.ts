@@ -1,4 +1,12 @@
+import { open } from "@tauri-apps/plugin-dialog";
 import { defineStore } from "pinia";
+
+async function selectFolder(): Promise<string> {
+	console.log("selecting folder");
+	const folder = await open({ directory: true, multiple: false });
+	if (!folder) return "";
+	return folder;
+}
 
 export const useAppstore = defineStore("appstore", {
 	state: () => ({
@@ -7,11 +15,12 @@ export const useAppstore = defineStore("appstore", {
 		targetPath: "",
 	}),
 	actions: {
-		setSource(path: string) {
-			this.sourcePath = path;
+		async setSource() {
+			console.log("set Source");
+			this.sourcePath = await selectFolder();
 		},
-		setTarget(path: string) {
-			this.targetPath = path;
+		async setTarget() {
+			this.targetPath = await selectFolder();
 		},
 		setMenuKey(key: string) {
 			this.menuKey = key;

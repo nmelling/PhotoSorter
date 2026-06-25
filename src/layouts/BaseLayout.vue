@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import FolderSelector from "../components/FolderSelector.vue";
 import {
 	renderIcon,
 	SourceFolder,
@@ -43,11 +44,12 @@ const menuOptions = computed(() => {
 <div class="h-screen flex flex-col">
     <n-layout-header
       bordered
-      class="h-16 flex items-center px-6 shrink-0"
+      class="h-16 flex items-center px-6 shrink-0 gap-2"
     >
       <div class="font-bold">
           PhotoSorter
       </div>
+      <FolderSelector />
     </n-layout-header>
 
     <div class="flex-1 min-h-0">

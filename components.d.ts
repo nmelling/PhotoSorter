@@ -13,6 +13,7 @@ declare module "vue" {
 	export interface GlobalComponents {
 		FileDisplayer: typeof import("./src/components/FileDisplayer.vue")["default"];
 		FolderExplorer: typeof import("./src/components/FolderExplorer.vue")["default"];
+		FolderSelector: typeof import("./src/components/FolderSelector.vue")["default"];
 		NButton: typeof import("naive-ui")["NButton"];
 		NLayout: typeof import("naive-ui")["NLayout"];
 		NLayoutContent: typeof import("naive-ui")["NLayoutContent"];
