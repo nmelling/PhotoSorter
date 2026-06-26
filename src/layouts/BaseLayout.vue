@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import FolderSelector from "../components/FolderSelector.vue";
-import { type MENU_KEY_TYPE, SOURCE_KEY, TARGET_KEY } from "../constants/menu";
+import FolderSelector from "@/components/FolderSelector.vue";
+import { type MENU_KEY_TYPE, SOURCE_KEY, TARGET_KEY } from "@/constants/menu";
+import { useAppstore } from "@/stores/app.store";
 import {
 	renderIcon,
 	SourceFolder,
@@ -9,7 +10,6 @@ import {
 	TargetFolder,
 	TargetFolderSelected,
 } from "../lib/icons";
-import { useAppstore } from "../stores/app.store";
 
 const appstore = useAppstore();
 const collapsed = ref(true);

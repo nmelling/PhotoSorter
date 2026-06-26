@@ -1,6 +1,6 @@
 import { open } from "@tauri-apps/plugin-dialog";
 import { defineStore } from "pinia";
-import type { MENU_KEY_TYPE } from "../constants/menu";
+import type { MENU_KEY_TYPE } from "@/constants/menu";
 
 async function selectFolder(): Promise<string> {
 	const folder = await open({ directory: true, multiple: false });

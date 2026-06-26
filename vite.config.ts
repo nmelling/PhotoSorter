@@ -1,3 +1,4 @@
+import path from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import vue from "@vitejs/plugin-vue";
 import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
@@ -18,6 +19,11 @@ export default defineConfig(async () => ({
 		}),
 		VueDevTools(),
 	],
+	resolve: {
+		alias: {
+			"@": path.resolve(__dirname, "./src"),
+		},
+	},
 
 	// Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
 	//
