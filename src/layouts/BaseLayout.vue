@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import FolderSelector from "../components/FolderSelector.vue";
+import { type MENU_KEY_TYPE, SOURCE_KEY, TARGET_KEY } from "../constants/menu";
 import {
 	renderIcon,
 	SourceFolder,
@@ -12,7 +13,7 @@ import { useAppstore } from "../stores/app.store";
 
 const appstore = useAppstore();
 const collapsed = ref(true);
-const activeKey = ref("source");
+const activeKey = ref<MENU_KEY_TYPE>(SOURCE_KEY);
 
 function storeMenuKey() {
 	appstore.setMenuKey(activeKey.value);
@@ -24,14 +25,14 @@ const menuOptions = computed(() => {
 	return [
 		{
 			label: "Source",
-			key: "source",
+			key: SOURCE_KEY,
 			icon: renderIcon(
 				appstore.$state.sourcePath ? SourceFolderSelected : SourceFolder
 			),
 		},
 		{
 			label: "Cible",
-			key: "target",
+			key: TARGET_KEY,
 			icon: renderIcon(
 				appstore.$state.targetPath ? TargetFolderSelected : TargetFolder
 			),
@@ -49,7 +50,7 @@ const menuOptions = computed(() => {
       <div class="font-bold">
           PhotoSorter
       </div>
-      <FolderSelector />
+      <FolderSelector show-source show-target />
     </n-layout-header>
 
     <div class="flex-1 min-h-0">
