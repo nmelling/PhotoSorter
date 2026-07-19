@@ -58,15 +58,11 @@ const menuOptions = computed(() => {
       <n-layout has-sider class="h-full">
         <n-layout-sider
           bordered
-          collapse-mode="width"
-          :collapsed-width="64"
-          :width="240"
-          v-model:collapsed="collapsed"
-          show-trigger
+          :width="64"
         >
           <n-menu
             v-model:value="activeKey"
-            :collapsed="collapsed"
+            collapsed
             :collapsed-width="64"
             :collapsed-icon-size="22"
             :options="menuOptions"
