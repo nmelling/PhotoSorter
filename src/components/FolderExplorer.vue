@@ -2,7 +2,7 @@
 import { convertFileSrc } from "@tauri-apps/api/core";
 import { NIcon, NImage } from "naive-ui";
 import { storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import type { FileInfo } from "@/bindings/FileInfo";
 import { ALLOWED_MIMETYPES } from "@/constants/file";
 import { FolderIcon, PdfIcon, renderIcon, UnknownFileIcon } from "@/lib/icons";
@@ -18,7 +18,7 @@ type Entry = FileInfo & {
 };
 
 const entries = ref<Entry[]>([]);
-const selectedIdx = ref<number>();
+const selectedIdx = ref(0);
 
 async function setEntries() {
 	const allEntries = await appstore.getDirEntries();
@@ -34,7 +34,7 @@ async function setEntries() {
 			formatted.icon = renderIcon(PdfIcon);
 		return formatted;
 	});
-	selectedIdx.value = entries.value.length > 0 ? 0 : undefined;
+	selectedIdx.value = 0;
 }
 
 watch(menuKey, setEntries, { immediate: true });
@@ -44,7 +44,23 @@ watch(targetPath, setEntries, { immediate: true });
 function onClickSelect(index: number): void {
 	selectedIdx.value = index;
 }
-const selectedEntry = computed(() => entries.value[selectedIdx.value ?? 0]);
+const selectedEntry = computed(() => entries.value[selectedIdx.value]);
+
+function onKeydownSelect(e: KeyboardEvent) {
+	const entriesLength = entries.value.length;
+	if (entriesLength === 0) return;
+	if (e.code === "ArrowRight")
+		selectedIdx.value = (selectedIdx.value + 1) % entriesLength;
+	else if (e.code === "ArrowLeft")
+		selectedIdx.value = (selectedIdx.value - 1 + entriesLength) % entriesLength;
+}
+
+onMounted(() => {
+	window.addEventListener("keydown", onKeydownSelect);
+});
+onBeforeUnmount(() => {
+	window.removeEventListener("keydown", onKeydownSelect);
+});
 
 // Listing des fichiers dispo
 // Affichage dans une mini galerie pour navigation
@@ -70,14 +86,14 @@ const selectedEntry = computed(() => entries.value[selectedIdx.value ?? 0]);
       <img
         v-if="entry.is_allowed"
         :src="entry.src"
-        class="w-28 h-20 object-cover rounded-xl"
+        class="w-50 h-20 object-cover rounded-xl"
       />
 
       <NIcon
         v-else
         :component="entry.icon"
         size="80"
-        class="w-28 h-20 flex items-center justify-center"
+        class="w-50 h-20 flex items-center justify-center"
       />
     </div>
   </div>
