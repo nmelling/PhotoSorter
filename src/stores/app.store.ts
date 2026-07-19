@@ -1,6 +1,8 @@
+import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { defineStore } from "pinia";
-import type { MENU_KEY_TYPE } from "@/constants/menu";
+import type { FileInfo } from "@/bindings/FileInfo";
+import { type MENU_KEY_TYPE, SOURCE_KEY, TARGET_KEY } from "@/constants/menu";
 
 async function selectFolder(): Promise<string> {
 	const folder = await open({ directory: true, multiple: false });
@@ -23,6 +25,19 @@ export const useAppstore = defineStore("appstore", {
 		},
 		setMenuKey(key: MENU_KEY_TYPE) {
 			this.menuKey = key;
+		},
+		async getDirEntries() {
+			if (!this.menuKey) return [];
+
+			const mapped = {
+				[SOURCE_KEY]: this.sourcePath,
+				[TARGET_KEY]: this.targetPath,
+			};
+
+			const entries = await invoke<FileInfo[]>("read_dir_details", {
+				path: mapped[this.menuKey],
+			});
+			return entries;
 		},
 	},
 });

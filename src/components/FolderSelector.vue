@@ -31,7 +31,7 @@ const themeVars = useThemeVars();
             <NButton
                 :render-icon="renderIcon(SourceFolder)"
                 :type="sourcePath && 'success'"
-                :tertiary="sourcePath"
+                :tertiary="Boolean(sourcePath) || undefined"
                 @click="appstore.setSource"
             >{{ sourcePath || 'Spécifier le dossier source' }}</NButton>
             <NIcon
@@ -44,7 +44,7 @@ const themeVars = useThemeVars();
             <NButton
                 :render-icon="renderIcon(TargetFolder)"
                 :type="targetPath && 'success'"
-                :tertiary="targetPath"
+                :tertiary="Boolean(targetPath) || undefined"
                 @click="appstore.setTarget"
             >{{ targetPath || 'Spécifier le dossier cible' }}</NButton>
             <NIcon
