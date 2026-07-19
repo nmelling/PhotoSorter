@@ -49,7 +49,8 @@ const menuOptions = computed(() => {
     >
       <div class="font-bold">
           PhotoSorter
-      </div>
+      </div
+      <!-- Affichage du chemin du dossier dans le header plutot avec possibilité de naviguer pour revenir en arriere -->
       <FolderSelector show-source show-target />
     </n-layout-header>
 
@@ -73,7 +74,6 @@ const menuOptions = computed(() => {
         </n-layout-sider>
 
         <n-layout-content
-          content-style="padding: 24px;"
           class="overflow-auto"
         >
           <slot />
