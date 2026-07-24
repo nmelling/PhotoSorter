@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 import FolderSelector from "@/components/FolderSelector.vue";
 import { type MENU_KEY_TYPE, SOURCE_KEY, TARGET_KEY } from "@/constants/menu";
@@ -12,7 +13,7 @@ import {
 import { useAppstore } from "@/stores/app.store";
 
 const appstore = useAppstore();
-const collapsed = ref(true);
+const { actionBehaviour } = storeToRefs(appstore);
 const activeKey = ref<MENU_KEY_TYPE>(SOURCE_KEY);
 
 function storeMenuKey() {
@@ -79,9 +80,16 @@ const menuOptions = computed(() => {
 
     <n-layout-footer
       bordered
-      class="h-12 flex items-center justify-center shrink-0"
+      class="h-12 px-3 flex items-center shrink-0"
     >
-      Footer
+        <n-switch :value="actionBehaviour === 'copy'" @update:value="appstore.toggleActionBehaviour">
+            <template #checked>
+                Copier
+            </template>
+            <template #unchecked>
+            Déplacer
+            </template>
+        </n-switch>
     </n-layout-footer>
   </div>
 </template>

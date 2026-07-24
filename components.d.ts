@@ -22,6 +22,7 @@ declare module "vue" {
 		NLayoutHeader: typeof import("naive-ui")["NLayoutHeader"];
 		NLayoutSider: typeof import("naive-ui")["NLayoutSider"];
 		NMenu: typeof import("naive-ui")["NMenu"];
+		NSwitch: typeof import("naive-ui")["NSwitch"];
 		SourceDisplayer: typeof import("./src/components/SourceDisplayer.vue")["default"];
 		TargetDisplayer: typeof import("./src/components/TargetDisplayer.vue")["default"];
 	}

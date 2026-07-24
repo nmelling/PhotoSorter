@@ -17,3 +17,6 @@ export const ALLOWED_MIMETYPES = [
 	"image/webp",
 	"image/x-icon",
 ];
+
+export const ACTION_BEHAVIOURS = ["copy", "move"] as const;
+export type ACTION_BEHAVIOUR_TYPE = (typeof ACTION_BEHAVIOURS)[number];

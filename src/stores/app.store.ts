@@ -2,6 +2,10 @@ import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { defineStore } from "pinia";
 import type { FileInfo } from "@/bindings/FileInfo";
+import {
+	type ACTION_BEHAVIOUR_TYPE,
+	ACTION_BEHAVIOURS,
+} from "@/constants/file";
 import { type MENU_KEY_TYPE, SOURCE_KEY, TARGET_KEY } from "@/constants/menu";
 
 async function selectFolder(): Promise<string> {
@@ -15,6 +19,7 @@ export const useAppstore = defineStore("appstore", {
 		menuKey: null as MENU_KEY_TYPE | null,
 		sourcePath: "",
 		targetPath: "",
+		actionBehaviour: "copy" as ACTION_BEHAVIOUR_TYPE,
 	}),
 	actions: {
 		async setSource() {
@@ -25,6 +30,12 @@ export const useAppstore = defineStore("appstore", {
 		},
 		setMenuKey(key: MENU_KEY_TYPE) {
 			this.menuKey = key;
+		},
+		toggleActionBehaviour() {
+			if (ACTION_BEHAVIOURS.length > 2) throw new Error("UNKNOWN_ACTIONS");
+			this.actionBehaviour = ACTION_BEHAVIOURS.filter(
+				mode => mode !== this.actionBehaviour
+			)[0];
 		},
 		async getDirEntries() {
 			if (!this.menuKey) return [];
