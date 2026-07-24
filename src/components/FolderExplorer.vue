@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { convertFileSrc } from "@tauri-apps/api/core";
-import { NIcon, NImage } from "naive-ui";
+import { NIcon } from "naive-ui";
 import { storeToRefs } from "pinia";
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import type { FileInfo } from "@/bindings/FileInfo";
@@ -18,6 +18,7 @@ type Entry = FileInfo & {
 };
 
 const entries = ref<Entry[]>([]);
+const thumbs = ref<HTMLElement[]>([]);
 const selectedIdx = ref(0);
 
 async function setEntries() {
@@ -45,6 +46,19 @@ function onClickSelect(index: number): void {
 	selectedIdx.value = index;
 }
 const selectedEntry = computed(() => entries.value[selectedIdx.value]);
+watch(
+	selectedIdx,
+	newIdx => {
+		const thumb = thumbs.value[newIdx];
+		if (!thumb) return;
+		thumb.scrollIntoView({
+			behavior: "smooth",
+			block: "nearest",
+			inline: "center",
+		});
+	},
+	{ immediate: true }
+);
 
 function onKeydownSelect(e: KeyboardEvent) {
 	const entriesLength = entries.value.length;
@@ -62,9 +76,6 @@ onBeforeUnmount(() => {
 	window.removeEventListener("keydown", onKeydownSelect);
 });
 
-// Listing des fichiers dispo
-// Affichage dans une mini galerie pour navigation
-// Affichage plein écran sur page
 // Bouton pour déplacer/copier ?
 // Configuration pour déplacer/copier au sein du footer et un seul bouton d'action pour éviter la confusion ?
 // Double clic sur icone dossier permet de naviguer au sein du dossier
@@ -74,11 +85,12 @@ onBeforeUnmount(() => {
 <template>
 <div class="FolderExplorer flex flex-col h-screen">
   <div
-    class="MiniGallery sticky top-0 z-10 flex gap-3 overflow-x-auto scrollbar-hide p-2 border-b bg-white shrink-0"
+    class="MiniGallery sticky top-0 z-10 flex flex-nowrap gap-3 overflow-x-auto scrollbar-hide p-2 border-b bg-white shrink-0"
   >
     <div
       v-for="(entry, index) in entries"
       :key="index"
+      :ref="el => { if (el) thumbs[index] = el as HTMLElement }"
       class="rounded-xl hover:cursor-pointer hover:scale-105 transition"
       :class="{ 'border-2 border-red-600': selectedIdx === index }"
       @click="onClickSelect(index)"
@@ -86,14 +98,14 @@ onBeforeUnmount(() => {
       <img
         v-if="entry.is_allowed"
         :src="entry.src"
-        class="w-50 h-20 object-cover rounded-xl"
+        class="max-w-25 min-w-25 max-h-25 min-h-25 object-cover rounded-xl"
       />
 
       <NIcon
         v-else
         :component="entry.icon"
         size="80"
-        class="w-50 h-20 flex items-center justify-center"
+        class="max-w-25 min-w-25 max-h-25 min-h-25 flex items-center justify-center"
       />
     </div>
   </div>
