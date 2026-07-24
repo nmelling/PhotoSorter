@@ -1,6 +1,8 @@
 import {
 	BookQuestionMark20Filled,
 	CheckmarkCircle32Regular,
+	CopyArrowRight16Filled,
+	Delete28Filled,
 	DocumentPdf24Filled,
 	Folder28Filled,
 	Folder28Regular,
@@ -28,3 +30,5 @@ export const PdfIcon = DocumentPdf24Filled;
 export const FolderIcon = Folder32Filled;
 export const ImgIcon = Image20Regular;
 export const UnknownFileIcon = BookQuestionMark20Filled;
+export const DeleteIcon = Delete28Filled;
+export const SortIcon = CopyArrowRight16Filled;

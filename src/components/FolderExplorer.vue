@@ -5,7 +5,14 @@ import { storeToRefs } from "pinia";
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import type { FileInfo } from "@/bindings/FileInfo";
 import { ALLOWED_MIMETYPES } from "@/constants/file";
-import { FolderIcon, PdfIcon, renderIcon, UnknownFileIcon } from "@/lib/icons";
+import {
+	DeleteIcon,
+	FolderIcon,
+	PdfIcon,
+	renderIcon,
+	SortIcon,
+	UnknownFileIcon,
+} from "@/lib/icons";
 import { useAppstore } from "@/stores/app.store";
 
 const appstore = useAppstore();
@@ -76,6 +83,28 @@ onBeforeUnmount(() => {
 	window.removeEventListener("keydown", onKeydownSelect);
 });
 
+const loading = ref(false);
+async function onClickDelete(path: string) {
+	if (loading.value) return;
+	loading.value = true;
+	try {
+		await appstore.deleteFile(path);
+	} catch (err) {
+		console.error(err);
+	}
+	loading.value = false;
+}
+
+async function onClickSort(path: string) {
+	if (loading.value) return;
+	loading.value = true;
+	try {
+		await appstore.sortFile(path);
+	} catch (err) {
+		console.error(err);
+	}
+	loading.value = false;
+}
 // Bouton pour déplacer/copier ?
 // Configuration pour déplacer/copier au sein du footer et un seul bouton d'action pour éviter la confusion ?
 // Double clic sur icone dossier permet de naviguer au sein du dossier
@@ -111,6 +140,22 @@ onBeforeUnmount(() => {
   </div>
 
   <div class="ImgDisplayer relative flex-1 flex flex-col overflow-hidden">
+    <div class="absolute top-0 right-0 flex w-full justify-between px-3 py-2 gap-3">
+        <NButton type="error" @click="onClickDelete">
+            <template #icon>
+                <NIcon>
+                    <DeleteIcon />
+                </NIcon>
+            </template>
+        </NButton>
+        <NButton type="primary" @click="onClickSort">
+            <template #icon>
+                <NIcon>
+                    <SortIcon />
+                </NIcon>
+            </template>
+        </NButton>
+    </div>
     <div
       class="flex-1 flex items-center justify-center bg-neutral-900 overflow-hidden"
     >

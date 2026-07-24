@@ -50,5 +50,11 @@ export const useAppstore = defineStore("appstore", {
 			});
 			return entries;
 		},
+		async deleteFile(path: string) {
+			console.log("FILE_DELETION", path);
+		},
+		async sortFile(path: string) {
+			console.log("FILE_SORTING", path);
+		},
 	},
 });
