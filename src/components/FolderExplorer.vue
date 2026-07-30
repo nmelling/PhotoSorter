@@ -141,14 +141,23 @@ async function onClickSort(path: string) {
 
   <div class="ImgDisplayer relative flex-1 flex flex-col overflow-hidden">
     <div class="absolute top-0 right-0 flex w-full justify-between px-3 py-2 gap-3">
-        <NButton type="error" @click="onClickDelete">
+        <NButton
+            type="error"
+            :loading="loading"
+            @click="onClickDelete"
+        >
             <template #icon>
                 <NIcon>
                     <DeleteIcon />
                 </NIcon>
             </template>
         </NButton>
-        <NButton type="primary" @click="onClickSort">
+        <NButton
+            type="primary"
+            :disabled="menuKey !== 'source' || !targetPath"
+            :loading="loading"
+            @click="onClickSort"
+        >
             <template #icon>
                 <NIcon>
                     <SortIcon />

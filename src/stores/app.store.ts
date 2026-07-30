@@ -50,11 +50,24 @@ export const useAppstore = defineStore("appstore", {
 			});
 			return entries;
 		},
-		async deleteFile(path: string) {
-			console.log("FILE_DELETION", path);
+		async deleteFile(filepath: string) {
+			console.log("FILE_DELETION", filepath);
 		},
-		async sortFile(path: string) {
-			console.log("FILE_SORTING", path);
+		async sortFile(filepath: string) {
+			if (!this.targetPath) throw new Error("TARGET_PATH_UNDEFINED");
+			console.log("FILE_SORTING", filepath);
+
+			let invokedFn = "copy_file";
+			if (this.actionBehaviour === "move") invokedFn = "move_file";
+			try {
+				await invoke(invokedFn, {
+					filepath,
+					targetpath: this.targetPath,
+				});
+			} catch (err) {
+				// TODO: TOAST
+				console.error(err);
+			}
 		},
 	},
 });
