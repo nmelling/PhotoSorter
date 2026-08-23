@@ -42,12 +42,16 @@ async function setEntries() {
 			formatted.icon = renderIcon(PdfIcon);
 		return formatted;
 	});
+}
+
+async function initEntries() {
+	await setEntries();
 	selectedIdx.value = 0;
 }
 
-watch(menuKey, setEntries, { immediate: true });
-watch(sourcePath, setEntries, { immediate: true });
-watch(targetPath, setEntries, { immediate: true });
+watch(menuKey, initEntries, { immediate: true });
+watch(sourcePath, initEntries, { immediate: true });
+watch(targetPath, initEntries, { immediate: true });
 
 function onClickSelect(index: number): void {
 	selectedIdx.value = index;
@@ -67,46 +71,73 @@ watch(
 	{ immediate: true }
 );
 
-function onKeydownSelect(e: KeyboardEvent) {
+function setNext() {
 	const entriesLength = entries.value.length;
 	if (entriesLength === 0) return;
-	if (e.code === "ArrowRight")
-		selectedIdx.value = (selectedIdx.value + 1) % entriesLength;
-	else if (e.code === "ArrowLeft")
-		selectedIdx.value = (selectedIdx.value - 1 + entriesLength) % entriesLength;
+	selectedIdx.value = (selectedIdx.value + 1) % entriesLength;
+}
+
+function setPrevious() {
+	const entriesLength = entries.value.length;
+	if (entriesLength === 0) return;
+	selectedIdx.value = (selectedIdx.value - 1 + entriesLength) % entriesLength;
+}
+
+async function onClickSort() {
+	if (menuKey.value !== "source") return;
+	if (loading.value) return;
+	if (!selectedEntry.value) return;
+	if (!selectedEntry.value.is_allowed) return;
+	loading.value = true;
+	try {
+		await appstore.sortFile(selectedEntry.value.path);
+		if (appstore.actionBehaviour === "move") {
+			await setEntries();
+		} else {
+			setNext();
+		}
+	} catch (err) {
+		console.error(err);
+	}
+	loading.value = false;
+}
+
+function onKeydown(e: KeyboardEvent) {
+	switch (e.code) {
+		case "ArrowRight":
+			setNext();
+			break;
+		case "ArrowLeft":
+			setPrevious();
+			break;
+		case "Enter":
+			onClickSort();
+			break;
+		default:
+	}
 }
 
 onMounted(() => {
-	window.addEventListener("keydown", onKeydownSelect);
+	window.addEventListener("keydown", onKeydown);
 });
 onBeforeUnmount(() => {
-	window.removeEventListener("keydown", onKeydownSelect);
+	window.removeEventListener("keydown", onKeydown);
 });
 
 const loading = ref(false);
 async function onClickDelete(path: string) {
 	if (loading.value) return;
+	if (!selectedEntry.value) return;
+	if (!selectedEntry.value.is_allowed) return;
 	loading.value = true;
 	try {
 		await appstore.deleteFile(path);
+		setNext();
 	} catch (err) {
 		console.error(err);
 	}
 	loading.value = false;
 }
-
-async function onClickSort(path: string) {
-	if (loading.value) return;
-	loading.value = true;
-	try {
-		await appstore.sortFile(path);
-	} catch (err) {
-		console.error(err);
-	}
-	loading.value = false;
-}
-// Bouton pour déplacer/copier ?
-// Configuration pour déplacer/copier au sein du footer et un seul bouton d'action pour éviter la confusion ?
 // Double clic sur icone dossier permet de naviguer au sein du dossier
 // Affichage du chemin du dossier dans le header plutot avec possibilité de naviguer pour revenir en arriere
 </script>
@@ -143,25 +174,22 @@ async function onClickSort(path: string) {
     <div class="absolute top-0 right-0 flex w-full justify-between px-3 py-2 gap-3">
         <NButton
             type="error"
+            :disabled="!selectedEntry?.is_allowed"
             :loading="loading"
             @click="onClickDelete"
         >
             <template #icon>
-                <NIcon>
-                    <DeleteIcon />
-                </NIcon>
+                <DeleteIcon />
             </template>
         </NButton>
         <NButton
             type="primary"
-            :disabled="menuKey !== 'source' || !targetPath"
+            :disabled="menuKey !== 'source' || !targetPath || !selectedEntry?.is_allowed"
             :loading="loading"
             @click="onClickSort"
         >
             <template #icon>
-                <NIcon>
-                    <SortIcon />
-                </NIcon>
+                <SortIcon />
             </template>
         </NButton>
     </div>

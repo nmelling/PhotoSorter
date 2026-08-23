@@ -54,8 +54,8 @@ export const useAppstore = defineStore("appstore", {
 			console.log("FILE_DELETION", filepath);
 		},
 		async sortFile(filepath: string) {
+			if (this.menuKey !== "source") return;
 			if (!this.targetPath) throw new Error("TARGET_PATH_UNDEFINED");
-			console.log("FILE_SORTING", filepath);
 
 			let invokedFn = "copy_file";
 			if (this.actionBehaviour === "move") invokedFn = "move_file";
