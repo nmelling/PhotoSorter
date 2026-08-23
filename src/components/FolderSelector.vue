@@ -23,9 +23,6 @@ const themeVars = useThemeVars();
 
 <template>
 <div>
-    <div v-if="hasSlots" class="mb-2">
-        <slot />
-    </div>
     <div class="flex items-center gap-2">
         <div v-if="showSource" class="flex items-center gap-2">
             <NButton
@@ -53,6 +50,9 @@ const themeVars = useThemeVars();
                 :depth="targetPath ? 1 : 5"
             />
         </div>
+    </div>
+    <div v-if="hasSlots">
+        <slot />
     </div>
 </div>
 </template>

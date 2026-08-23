@@ -1,4 +1,5 @@
 import {
+	ArrowSwap20Regular,
 	BookQuestionMark20Filled,
 	CheckmarkCircle32Regular,
 	CopyArrowRight16Filled,
@@ -32,3 +33,4 @@ export const ImgIcon = Image20Regular;
 export const UnknownFileIcon = BookQuestionMark20Filled;
 export const DeleteIcon = Delete28Filled;
 export const SortIcon = CopyArrowRight16Filled;
+export const SwitchFolderIcon = ArrowSwap20Regular;

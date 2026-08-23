@@ -7,13 +7,14 @@ import {
 	renderIcon,
 	SourceFolder,
 	SourceFolderSelected,
+	SwitchFolderIcon,
 	TargetFolder,
 	TargetFolderSelected,
 } from "@/lib/icons";
 import { useAppstore } from "@/stores/app.store";
 
 const appstore = useAppstore();
-const { actionBehaviour } = storeToRefs(appstore);
+const { targetPath, sourcePath, actionBehaviour } = storeToRefs(appstore);
 const activeKey = ref<MENU_KEY_TYPE>(SOURCE_KEY);
 
 function storeMenuKey() {
@@ -52,7 +53,19 @@ const menuOptions = computed(() => {
           PhotoSorter
       </div
       <!-- Affichage du chemin du dossier dans le header plutot avec possibilité de naviguer pour revenir en arriere -->
-      <FolderSelector show-source show-target />
+      <FolderSelector class="flex items-center gap-2" show-source show-target>
+          <div>
+              <NButton
+                  type="primary"
+                  :disabled="!targetPath && !sourcePath"
+                  @click="appstore.switchFolders"
+              >
+                  <template #icon>
+                      <SwitchFolderIcon />
+                  </template>
+              </NButton>
+          </div>
+      </FolderSelector>
     </n-layout-header>
 
     <div class="flex-1 min-h-0">
@@ -71,7 +84,7 @@ const menuOptions = computed(() => {
         </n-layout-sider>
 
         <n-layout-content
-          class="overflow-auto"
+          class="overflow-auto p-2"
         >
           <slot />
         </n-layout-content>

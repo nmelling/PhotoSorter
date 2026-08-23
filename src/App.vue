@@ -28,7 +28,7 @@ const isInit = computed(() => {
                     :show-source="menuKey === SOURCE_KEY"
                     :show-target="menuKey === TARGET_KEY"
                 >
-                    <span class="font-bold">Veuillez sélectionner un dossier pour commencer</span>
+                    <div class="font-bold mt-2">Veuillez sélectionner un dossier pour commencer</div>
                 </FolderSelector>
             </div>
         </div>

@@ -28,6 +28,12 @@ export const useAppstore = defineStore("appstore", {
 		async setTarget() {
 			this.targetPath = await selectFolder();
 		},
+		switchFolders() {
+			const newSource = this.targetPath;
+			const newTarget = this.sourcePath;
+			this.sourcePath = newSource;
+			this.targetPath = newTarget;
+		},
 		setMenuKey(key: MENU_KEY_TYPE) {
 			this.menuKey = key;
 		},
